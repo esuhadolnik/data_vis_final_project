@@ -4,6 +4,8 @@
 //               Final Homework
 //
 
+import static javax.swing.JOptionPane.*;
+
 ArrayList<CsvFile> files;
 
 void setup() {
@@ -13,6 +15,11 @@ void setup() {
   FileManager fm = new FileManager(sketchPath("") + "csv\\");
   
   files = fm.getCsvFiles();
+  
+  if (files == null) {
+    showMessageDialog(null, "invalid files");
+    exit(); 
+  }
 }
 
 void draw() {
