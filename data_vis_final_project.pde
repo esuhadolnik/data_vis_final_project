@@ -12,7 +12,7 @@ void setup() {
   surface.setResizable(true); 
   size(800, 600);
   
-  FileManager fm = new FileManager(sketchPath("") + "csv//");
+  FileManager fm = new FileManager(sketchPath("") + "csv/");
   
   files = fm.getCsvFiles();
   
