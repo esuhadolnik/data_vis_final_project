@@ -7,8 +7,6 @@
 import static javax.swing.JOptionPane.*;
 
 ArrayList<CsvFile> files;
-int  csvColor[] = {#FC0808, #FC9308, #FCF508, #30B716, #0832FC, #49F0CF, 
-                    #9949F0, #F049DF, #F049DF, #155E9D}; 
 
 void setup() {
   surface.setResizable(true); 
