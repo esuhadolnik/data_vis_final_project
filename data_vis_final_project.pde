@@ -41,16 +41,20 @@ void draw() {
 
 void drawTickers() {
   textSize(20);
-  textAlign(LEFT);
-  fill(#000000);
-  
-  float x0 = width* 0.01;
-  int y0 = height/2 + 10 + height/3 + height/13;
-  int h = height/7;
-  float w = (width - 5) / files.size(); 
+  textAlign(CENTER);
+  stroke(#000000); 
+  float x0 = 2;
+  final int yR = height/2 + 10 + height/3;
+  final int hR = height/7;
+  final float wR = (float)(width - 5) / (float)files.size(); 
   
   for (CsvFile csv : files) {
-    text(csv.ticker, x0, y0);
-    x0 += w;
+    rect(x0, yR, wR, hR);
+    fill(#000000);
+    float textX = x0 + wR/2;
+  
+    text(csv.ticker, textX, yR + hR/2);
+    x0 += wR;
+    fill(#ffffff);
   }
 }
