@@ -8,10 +8,12 @@ import java.io.File;
 class CsvFile {
   public String ticker;
   public Table csv;
+  public int color_Of_Ticker; 
   
-  public CsvFile(String ticker, Table csv) {
+  public CsvFile(String ticker, Table csv, int color_Of_Ticker) {
     this.ticker = ticker;
     this.csv = csv;
+    this.color_Of_Ticker = color_Of_Ticker; 
   }
 }
 
@@ -23,6 +25,9 @@ class CsvFile {
 // use.
 class FileManager {
   private String directory;
+  public int  csvColor[] = {#FC0808, #FC9308, #30B716,#0832FC, 
+                                #30BFAA, #9949F0, #F049DF, 
+                                #BF4D6F, #155E9D, #000000}; 
   
   FileManager(String directory) {
     this.directory = directory;
@@ -36,6 +41,7 @@ class FileManager {
       
       File[] rawFiles = folder.listFiles();
       
+      int i = 0; 
       for (File f : rawFiles) {
           String path = f.getAbsolutePath();
           
@@ -45,7 +51,10 @@ class FileManager {
           
           ticker = ticker.substring(0, end);
           
-          files.add(new CsvFile(ticker, loadTable(path)));
+          int color_of_ticker = csvColor[i];
+          i++; 
+          
+          files.add(new CsvFile(ticker, loadTable(path), color_of_ticker));
       }
       
       return files;

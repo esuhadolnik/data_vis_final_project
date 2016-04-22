@@ -7,12 +7,14 @@
 import static javax.swing.JOptionPane.*;
 
 ArrayList<CsvFile> files;
+int  csvColor[] = {#FC0808, #FC9308, #FCF508, #30B716, #0832FC, #49F0CF, 
+                    #9949F0, #F049DF, #F049DF, #155E9D}; 
 
 void setup() {
   surface.setResizable(true); 
   size(800, 600);
   
-  FileManager fm = new FileManager(sketchPath("") + "csv\\");
+  FileManager fm = new FileManager(sketchPath("") + "csv//");
   
   files = fm.getCsvFiles();
   
@@ -20,6 +22,9 @@ void setup() {
     showMessageDialog(null, "invalid files");
     exit(); 
   }
+  
+  
+  colorMode(HSB); 
 }
 
 void draw() {
@@ -47,10 +52,9 @@ void drawTickers() {
   final int yR = height/2 + 10 + height/3;
   final int hR = height/7;
   final float wR = (float)(width - 5) / (float)files.size(); 
-  
   for (CsvFile csv : files) {
     rect(x0, yR, wR, hR);
-    fill(#000000);
+    fill(csv.color_Of_Ticker); 
     float textX = x0 + wR/2;
   
     text(csv.ticker, textX, yR + hR/2);
