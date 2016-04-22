@@ -24,6 +24,7 @@ void setup() {
 
 void draw() {
  //Top Left Rectangle
+ fill(#ffffff);
  rect(2, 2, width/2, height/2);
   
  //Top Right Rectangle
@@ -34,4 +35,22 @@ void draw() {
   
  //Bottom - Button Rectangle
  rect(2, height/2 + 10 + height/3, width - 5, height/7); 
+ 
+ drawTickers();
+}
+
+void drawTickers() {
+  textSize(20);
+  textAlign(LEFT);
+  fill(#000000);
+  
+  float x0 = width* 0.01;
+  int y0 = height/2 + 10 + height/3 + height/13;
+  int h = height/7;
+  float w = (width - 5) / files.size(); 
+  
+  for (CsvFile csv : files) {
+    text(csv.ticker, x0, y0);
+    x0 += w;
+  }
 }
