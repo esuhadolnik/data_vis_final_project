@@ -8,7 +8,7 @@ import static javax.swing.JOptionPane.*;
 
 ArrayList<CsvFile> files;
 
- 
+  
 void setup() {
   surface.setResizable(true); 
   size(800, 600);
@@ -63,8 +63,8 @@ void drawTickers() {
 }
 
 void mousePressed() {
-  final int yR = height/2 + 10 + height/3;
-  final int hR = height/7;
+  final float yR = height/2.0 + 10 + height/3.0;
+  final float hR = height/7.0;
   float wR = (float)(width - 5) / (float)files.size();
   
   if (mouseY > yR && mouseY < yR + hR) {

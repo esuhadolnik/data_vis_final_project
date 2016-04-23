@@ -8,13 +8,27 @@ import java.io.File;
 class CsvFile {
   public String ticker;
   public Table csv;
-  public int color_Of_Ticker; 
+  
+  private int color_Of_Ticker; 
+  
+  public boolean selected;
   
   public CsvFile(String ticker, Table csv, int color_Of_Ticker) {
     this.ticker = ticker;
     this.csv = csv;
     this.color_Of_Ticker = color_Of_Ticker; 
+    this.selected = false;
   }
+  
+  int getColorOfTicker() {
+    if (selected) {
+      return color_Of_Ticker;
+    } else {
+      return color(#BFBFBF);
+    }
+  }
+  
+
 }
 
 //
@@ -27,7 +41,7 @@ class FileManager {
   private String directory;
   public int  csvColor[] = {#FC0808, #FC9308, #30B716,#0832FC, 
                                 #30BFAA, #9949F0, #F049DF, 
-                                #BF4D6F, #155E9D, #000000}; 
+                                #BF4D6F, #155E9D, #FF6200}; 
   
   FileManager(String directory) {
     this.directory = directory;
