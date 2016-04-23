@@ -48,6 +48,8 @@ class FileManager {
   }
   
   public ArrayList<CsvFile> getCsvFiles() {
+    String currentFile = "";
+    
     try {
       ArrayList<CsvFile> files = new ArrayList<CsvFile>();
     
@@ -58,6 +60,8 @@ class FileManager {
       int i = 0; 
       for (File f : rawFiles) {
           String path = f.getAbsolutePath();
+          
+          currentFile = path;
           
           String ticker = path.substring(directory.length(), path.length());
           
@@ -74,6 +78,7 @@ class FileManager {
       return files;
       
     } catch (Exception e) {
+      println(currentFile);
       return null;
     }
     
