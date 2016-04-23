@@ -8,13 +8,27 @@ import java.io.File;
 class CsvFile {
   public String ticker;
   public Table csv;
-  public int color_Of_Ticker; 
+  
+  private int color_Of_Ticker; 
+  
+  public boolean selected;
   
   public CsvFile(String ticker, Table csv, int color_Of_Ticker) {
     this.ticker = ticker;
     this.csv = csv;
     this.color_Of_Ticker = color_Of_Ticker; 
+    this.selected = false;
   }
+  
+  int getColorOfTicker() {
+    if (selected) {
+      return color_Of_Ticker;
+    } else {
+      return color(#BFBFBF);
+    }
+  }
+  
+
 }
 
 //
