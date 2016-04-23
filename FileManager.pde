@@ -68,7 +68,7 @@ class FileManager {
           int color_of_ticker = csvColor[i];
           i++; 
           
-          files.add(new CsvFile(ticker, loadTable(path), color_of_ticker));
+          files.add(new CsvFile(ticker, loadTable(path, "header"), color_of_ticker));
       }
       
       return files;
