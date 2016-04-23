@@ -25,9 +25,9 @@ class CsvFile {
 // use.
 class FileManager {
   private String directory;
-  public int  csvColor[] = {#FC0808, #FC9308, #30B716,#0832FC, 
+  public int  csvColor[] = {#FC0808, #FC9308, #215F02,#0832FC, 
                                 #30BFAA, #9949F0, #F049DF, 
-                                #BF4D6F, #155E9D, #000000}; 
+                                #BF4D6F, #155E9D, #67F720}; 
   
   FileManager(String directory) {
     this.directory = directory;
