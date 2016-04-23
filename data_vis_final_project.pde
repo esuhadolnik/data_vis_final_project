@@ -8,6 +8,7 @@ import static javax.swing.JOptionPane.*;
 
 ArrayList<CsvFile> files;
 
+ 
 void setup() {
   surface.setResizable(true); 
   size(800, 600);
@@ -20,8 +21,6 @@ void setup() {
     showMessageDialog(null, "invalid files");
     exit(); 
   }
-  
-  
   colorMode(HSB); 
 }
 
@@ -49,14 +48,34 @@ void drawTickers() {
   float x0 = 2;
   final int yR = height/2 + 10 + height/3;
   final int hR = height/7;
-  final float wR = (float)(width - 5) / (float)files.size(); 
+  float wR = (float)(width - 5) / (float)files.size();
+  
   for (CsvFile csv : files) {
     rect(x0, yR, wR, hR);
-    fill(csv.color_Of_Ticker); 
+    
+    fill(csv.getColorOfTicker()); 
     float textX = x0 + wR/2;
   
     text(csv.ticker, textX, yR + hR/2);
     x0 += wR;
     fill(#ffffff);
+  }
+}
+
+void mousePressed() {
+  final int yR = height/2 + 10 + height/3;
+  final int hR = height/7;
+  float wR = (float)(width - 5) / (float)files.size();
+  
+  if (mouseY > yR && mouseY < yR + hR) {
+    int x = 2;
+    for (int i = 0; i < files.size(); i++) {
+      boolean touch = mouseX > x && mouseX < x + wR;
+      
+      if (touch) {
+        files.get(i).selected = !files.get(i).selected;
+      }
+      x += wR;
+    }
   }
 }
