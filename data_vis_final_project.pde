@@ -8,6 +8,9 @@ import static javax.swing.JOptionPane.*;
 
 ArrayList<CsvFile> files;
 
+float MAX_OVERVIEW_VAL;
+float MIN_OVERVIEW_VAL;
+
   
 void setup() {
   surface.setResizable(true); 
@@ -22,6 +25,36 @@ void setup() {
     exit(); 
   }
   colorMode(HSB); 
+  
+  Float max = null;
+  Float min = null;
+  
+  for (CsvFile file : files) {
+    float localMax = getMaxCloseVal(file.csv);
+    float localMin = getMinCloseVal(file.csv);
+    
+    if (max == null) {
+      max = new Float(localMax);
+    } else if (max.floatValue() < localMax) {
+      max = new Float(localMax);
+    }
+    
+    if (min == null) {
+      min = new Float(localMin);
+    } else if (min.floatValue() > localMin) {
+      min = new Float(localMin);
+    }
+  }
+  
+  MAX_OVERVIEW_VAL = max.floatValue();
+  MIN_OVERVIEW_VAL = min.floatValue();
+  
+  println(MAX_OVERVIEW_VAL);
+  println(MIN_OVERVIEW_VAL);
+  
+  
+  
+  
 }
 
 void draw() {
@@ -79,3 +112,37 @@ void mousePressed() {
     }
   }
 }
+
+float getMaxCloseVal(Table tab) {
+  Float max = null;
+  for (TableRow row : tab.rows()) {
+    float close = row.getFloat("Close");
+    
+    if (max == null) {
+      max =  new Float(close);
+    }
+    else if (close > max.floatValue()) {
+      max = new Float(close);
+    }
+      
+  }
+  return max.floatValue();
+}
+
+float getMinCloseVal(Table tab) {
+  Float max = null;
+  for (TableRow row : tab.rows()) {
+    float close = row.getFloat("Close");
+    
+    if (max == null) {
+      max =  new Float(close);
+    }
+    else if (close < max.floatValue()) {
+      max = new Float(close);
+    }
+      
+  }
+  return max.floatValue();
+}
+  
+  
