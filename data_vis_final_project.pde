@@ -6,23 +6,37 @@
 
 import static javax.swing.JOptionPane.*;
 
+//holds the data for each stock 
 ArrayList<CsvFile> files;
 
+
+//the max and min closing price for 
+//all the stocks in the overview
+//screen
 float MAX_OVERVIEW_VAL;
 float MIN_OVERVIEW_VAL;
 
+//The max and min closing price
+//for the stocks in the selected
+//view/
 float MAX_SELECTED_VAL;
 float MIN_SELECTED_VAL;
 
 float MAX_DRAGGED_VAL;
 float MIN_DRAGGED_VAL;
-float minX, minY, maxX, maxY; 
+float minX, minY, maxX, maxY;
+float last_mouseX_pos;
 
-boolean dragging; 
+boolean dragging;
+
+//if box drawn, leave it up
+boolean boxDrawn = false;
+
 float startX; 
 float startY; 
 float endX; 
-float endY; 
+float endY;
+
 
 void setup() {
   surface.setResizable(true); 
@@ -98,9 +112,13 @@ void draw() {
 
   stroke(#000000);
 
-  if (dragging) {
+  if (boxDrawn) {
     noFill();
-    rect(startX, startY, mouseX-startX, mouseY-startY);
+    if (dragging) {
+      rect(startX, 2, mouseX-startX, height/2);
+    } else {
+      rect(startX, 2, last_mouseX_pos-startX, height/2);
+    }
   }
 }
 
@@ -127,6 +145,7 @@ void drawTickers() {
 
 void mouseReleased() {
   dragging = false;
+  last_mouseX_pos = mouseX;
 }
 
 void mousePressed() {
@@ -140,12 +159,16 @@ void mousePressed() {
   final float overviewHeightR = height/2.0;
   float overviewWidthR = (float)(width/2)/(float)files.size(); 
 
-  if (mouseX >= 2 && mouseX <= width/2 && mouseY>=2 && mouseY<= height/2) {
+  if (mouseX >= 2 && mouseX <= width/2 && mouseY>=2 && mouseY<= height/2 && !boxDrawn) {
     dragging = true;
     startX = mouseX;
     startY = mouseY;
+    boxDrawn = true;
   }
-
+  else if (mouseX >= 2 && mouseX <= width/2 && mouseY>=2 && mouseY<= height/2 && boxDrawn) {
+    boxDrawn = false;
+  }
+  
   boolean selectHappened = false;
 
   if (mouseY > yR && mouseY < yR + hR) {
