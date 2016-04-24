@@ -1,4 +1,4 @@
-// @authors: Bert Heinzelman, Emily Suhadolnik, Jimmy Boyle //<>//
+// @authors: Bert Heinzelman, Emily Suhadolnik, Jimmy Boyle //<>// //<>//
 // @date: april 20, 2016
 // @description: Stock market visualization
 //               Final Homework
@@ -144,8 +144,12 @@ void drawTickers() {
 }
 
 void mouseReleased() {
+  if (dragging) {
+    last_mouseX_pos = mouseX;
+  }
+    
   dragging = false;
-  last_mouseX_pos = mouseX;
+  
 }
 
 void mousePressed() {
