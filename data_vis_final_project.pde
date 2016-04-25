@@ -278,13 +278,16 @@ void drawLines(CsvFile file,
     float closeValue = r.getFloat("Close");
     
     if (boxDrawn && v == View.OVERVIEW) {
-      if (boxWidth+xPos < last_mouseX_pos && boxWidth+xPos > startX && !inSelectedZone) {
+      float min = min(last_mouseX_pos, startX);
+      float max = max(last_mouseX_pos, startX);
+      
+      if (boxWidth+xPos < max && boxWidth+xPos > min && !inSelectedZone) {
         endShape();
         stroke(file.getColorOfTicker());
         beginShape();
         inSelectedZone = true;
       }
-      else if (inSelectedZone && boxWidth + xPos < startX) {
+      else if (inSelectedZone && boxWidth + xPos < min) {
         endShape(); //<>//
         stroke(#BFBFBF);
         beginShape();
