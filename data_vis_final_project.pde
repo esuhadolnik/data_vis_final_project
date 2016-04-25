@@ -37,6 +37,12 @@ float startY;
 float endX; 
 float endY;
 
+enum View {
+  OVERVIEW,
+  SELECTED,
+  DETAIL_SELECTED
+}
+
 
 void setup() {
   surface.setResizable(true); 
@@ -251,16 +257,40 @@ void drawLines(CsvFile file,
   float boxWidth, 
   float boxHeight, 
   float MAX, 
-  float MIN) {
+  float MIN,
+  View v) {
   noFill();
-  stroke(file.getColorOfTicker()); 
-  strokeWeight(1); 
+  
+   
+  if (v == View.OVERVIEW && boxDrawn) {
+    stroke(#BFBFBF);
+  }
+  else
+    stroke(file.getColorOfTicker());
+     
   //rect(2, 2, width/2 - 10, height/2); 
   float xWidth = boxWidth/(float)(file.csv.getRowCount());  
 
+  boolean inSelectedZone = false;
+ 
   beginShape();
   for (TableRow r : file.csv.rows()) {
-    float closeValue = r.getFloat("Close"); 
+    float closeValue = r.getFloat("Close");
+    
+    if (boxDrawn && v == View.OVERVIEW) {
+      if (boxWidth+xPos < last_mouseX_pos && boxWidth+xPos > startX && !inSelectedZone) {
+        endShape();
+        stroke(file.getColorOfTicker());
+        beginShape();
+        inSelectedZone = true;
+      }
+      else if (inSelectedZone && boxWidth + xPos < startX) {
+        endShape(); //<>//
+        stroke(#BFBFBF);
+        beginShape();
+        inSelectedZone = false; 
+      }
+    }
     vertex(boxWidth+xPos, boxHeight-(((closeValue-MIN)/(MAX-MIN))*boxHeight));
     boxWidth-=xWidth;
   }
@@ -278,7 +308,8 @@ void drawSelectedLines() {
         width/2.0 - 10.0, 
         height/2.0, 
         MAX_SELECTED_VAL, 
-        MIN_SELECTED_VAL);
+        MIN_SELECTED_VAL,
+        View.SELECTED);
     }
   }
 }
@@ -289,7 +320,8 @@ void drawOverviewLines() {
       width/2.0 - 10.0, 
       height/2.0, 
       MAX_OVERVIEW_VAL, 
-      MIN_OVERVIEW_VAL);
+      MIN_OVERVIEW_VAL,
+      View.OVERVIEW);
 }
 
 void drawDetailedLines() {
