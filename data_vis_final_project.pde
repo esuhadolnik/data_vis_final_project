@@ -411,7 +411,7 @@ float getMaxDraggedCloseVal(Table tab, float minPct, float maxPct) {
   float actualMax=tab.getRowCount()-rowMin;
 
   if (actualMax-actualMin<15)
-    actualMax=actualMax+10;
+    actualMax=actualMax+1;
   int i=0;
   for (TableRow row : tab.rows()) {
     if ((i>=actualMin && i<=actualMax)||(maxPct==-1)) {
@@ -436,7 +436,7 @@ float getMinDraggedCloseVal(Table tab, float minPct, float maxPct) {
   float actualMax=tab.getRowCount()-rowMin;
 
   if (actualMax-actualMin<15)
-    actualMax=actualMax+10;
+    actualMax=actualMax+1;
   int i=0;
   for (TableRow row : tab.rows()) {
     if ((i>=actualMin &&i<=actualMax)||(maxPct==-1)) {
