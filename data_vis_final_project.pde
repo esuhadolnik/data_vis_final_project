@@ -1,4 +1,4 @@
-// @authors: Bert Heinzelman, Emily Suhadolnik, Jimmy Boyle //<>// //<>//
+// @authors: Bert Heinzelman, Emily Suhadolnik, Jimmy Boyle //<>// //<>// //<>//
 // @date: april 20, 2016
 // @description: Stock market visualization
 //               Final Homework
@@ -38,13 +38,13 @@ float endX;
 float endY;
 
 enum View {
-  OVERVIEW,
-  SELECTED,
-  DETAIL_SELECTED
+  OVERVIEW, 
+    SELECTED, 
+    DETAIL_SELECTED
 }
 
 
-void setup() {
+  void setup() {
   surface.setResizable(true); 
   size(800, 600);
   dragging = false; 
@@ -153,9 +153,8 @@ void mouseReleased() {
   if (dragging) {
     last_mouseX_pos = mouseX;
   }
-    
+
   dragging = false;
-  
 }
 
 void mousePressed() {
@@ -174,11 +173,10 @@ void mousePressed() {
     startX = mouseX;
     startY = mouseY;
     boxDrawn = true;
-  }
-  else if (mouseX >= 2 && mouseX <= width/2 && mouseY>=2 && mouseY<= height/2 && boxDrawn) {
+  } else if (mouseX >= 2 && mouseX <= width/2 && mouseY>=2 && mouseY<= height/2 && boxDrawn) {
     boxDrawn = false;
   }
-  
+
   boolean selectHappened = false;
 
   if (mouseY > yR && mouseY < yR + hR) {
@@ -257,41 +255,39 @@ void drawLines(CsvFile file,
   float boxWidth, 
   float boxHeight, 
   float MAX, 
-  float MIN,
+  float MIN, 
   View v) {
   noFill();
-  
-   
+
+
   if (v == View.OVERVIEW && boxDrawn) {
     stroke(#BFBFBF);
-  }
-  else
+  } else
     stroke(file.getColorOfTicker());
-     
+
   //rect(2, 2, width/2 - 10, height/2); 
   float xWidth = boxWidth/(float)(file.csv.getRowCount());  
 
   boolean inSelectedZone = false;
- 
+
   beginShape();
   for (TableRow r : file.csv.rows()) {
     float closeValue = r.getFloat("Close");
-    
+
     if (boxDrawn && v == View.OVERVIEW) {
       float min = min(last_mouseX_pos, startX);
       float max = max(last_mouseX_pos, startX);
-      
+
       if (boxWidth+xPos < max && boxWidth+xPos > min && !inSelectedZone) {
         endShape();
         stroke(file.getColorOfTicker());
         beginShape();
         inSelectedZone = true;
-      }
-      else if (inSelectedZone && boxWidth + xPos < min) {
-        endShape(); //<>//
+      } else if (inSelectedZone && boxWidth + xPos < min) {
+        endShape();
         stroke(#BFBFBF);
         beginShape();
-        inSelectedZone = false; 
+        inSelectedZone = false;
       }
     }
     vertex(boxWidth+xPos, boxHeight-(((closeValue-MIN)/(MAX-MIN))*boxHeight));
@@ -311,7 +307,7 @@ void drawSelectedLines() {
         width/2.0 - 10.0, 
         height/2.0, 
         MAX_SELECTED_VAL, 
-        MIN_SELECTED_VAL,
+        MIN_SELECTED_VAL, 
         View.SELECTED);
     }
   }
@@ -323,15 +319,12 @@ void drawOverviewLines() {
       width/2.0 - 10.0, 
       height/2.0, 
       MAX_OVERVIEW_VAL, 
-      MIN_OVERVIEW_VAL,
+      MIN_OVERVIEW_VAL, 
       View.OVERVIEW);
 }
 
 void drawDetailedLines() {
 
-  float maxSelected, minSelected, minTime, maxTime;  
-  float MIN = MIN_SELECTED_VAL;
-  float MAX = MAX_SELECTED_VAL;
   float boxHeight = height/3;
   float boxBottom = height/3 + height/2 + 5; 
 
@@ -342,20 +335,120 @@ void drawDetailedLines() {
       noFill();
       stroke(f.getColorOfTicker()); 
       strokeWeight(1);
-      
-      float boxWidth = width-5.0;
-      float xWidth = boxWidth/(float)(f.csv.getRowCount()); 
 
-      int beginRow = int(minX);
-      int endRow = int(maxX); 
-      
+      setDragged();
+      float MIN = MIN_DRAGGED_VAL;
+      float MAX = MAX_DRAGGED_VAL;
+      float newMaxX=min(maxX, width/2-2);
+      float newMinX=max(0, minX);
+      float minPct= (newMinX/(width/2-2));
+      float maxPct= (newMaxX/(width/2-2));
+      float rowMin=minPct*f.csv.getRowCount();
+      float rowMax=maxPct*f.csv.getRowCount();
+
+      float actualMin=f.csv.getRowCount()-rowMax;
+      float actualMax=f.csv.getRowCount()-rowMin;
+
+      float boxWidth = width-5.0;
+      float xWidth = boxWidth/(float)(rowMax-rowMin); 
+
+      int i=0;
       beginShape(); 
       for (TableRow r : f.csv.rows()) { 
-        float closeValue = r.getFloat("Close"); 
-        vertex(boxWidth+2, boxBottom-(((closeValue-MIN)/(MAX-MIN))*boxHeight));
-        boxWidth-=xWidth;
+        if (i>=actualMin&&i<=actualMax) {
+          float closeValue = r.getFloat("Close"); 
+          vertex(boxWidth+2, boxBottom-(((closeValue-MIN)/(MAX-MIN))*boxHeight));
+          boxWidth-=xWidth;
+        }
+        i++;
       }
       endShape();
     }
   }
+}
+//sets the values for brushing so that the long pane scales to the selection
+void setDragged() {
+  Float max=null;
+  Float min=null;
+  float newMaxX=min(maxX, width/2-2);
+  float newMinX=max(0, minX);
+  float rowMin= (newMinX/(width/2-2));
+  float rowMax= (newMaxX/(width/2-2));
+  if (rowMax==0)
+    rowMax=-1;
+  for (CsvFile file : files) {
+    if (!file.selected)
+      continue;
+
+    float localMax = getMaxDraggedCloseVal(file.csv, rowMin, rowMax);
+    float localMin = getMinDraggedCloseVal(file.csv, rowMin, rowMax);
+
+    if (max == null) {
+      max = new Float(localMax);
+    } else if (max.floatValue() < localMax) {
+      max = new Float(localMax);
+    }
+
+    if (min == null) {
+      min = new Float(localMin);
+    } else if (min.floatValue() > localMin) {
+      min = new Float(localMin);
+    }
+  }
+  if (max != null)
+    MAX_DRAGGED_VAL = max.floatValue();
+
+  if (min != null)
+    MIN_DRAGGED_VAL = min.floatValue();
+}
+
+float getMaxDraggedCloseVal(Table tab, float minPct, float maxPct) {
+  Float max = null;
+  float rowMin=minPct*tab.getRowCount();
+  float rowMax=maxPct*tab.getRowCount();
+
+  float actualMin=tab.getRowCount()-rowMax;
+  float actualMax=tab.getRowCount()-rowMin;
+
+  if (actualMax-actualMin<15)
+    actualMax=actualMax+10;
+  int i=0;
+  for (TableRow row : tab.rows()) {
+    if ((i>=actualMin && i<=actualMax)||(maxPct==-1)) {
+      float close = row.getFloat("Close");
+      if (max == null) {
+        max =  new Float(close);
+      } else if (close > max.floatValue()) {
+        max = new Float(close);
+      }
+    }
+    i++;
+  }
+  return max.floatValue();
+}
+
+float getMinDraggedCloseVal(Table tab, float minPct, float maxPct) {
+  Float max = null;
+  float rowMin=minPct*tab.getRowCount();
+  float rowMax=maxPct*tab.getRowCount();
+
+  float actualMin=tab.getRowCount()-rowMax;
+  float actualMax=tab.getRowCount()-rowMin;
+
+  if (actualMax-actualMin<15)
+    actualMax=actualMax+10;
+  int i=0;
+  for (TableRow row : tab.rows()) {
+    if ((i>=actualMin &&i<=actualMax)||(maxPct==-1)) {
+      float close = row.getFloat("Close");
+
+      if (max == null) {
+        max =  new Float(close);
+      } else if (close < max.floatValue()) {
+        max = new Float(close);
+      }
+    }
+    i++;
+  }
+  return max.floatValue();
 }
