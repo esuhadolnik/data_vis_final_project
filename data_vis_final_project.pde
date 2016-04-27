@@ -22,6 +22,7 @@ float MIN_OVERVIEW_VAL;
 float MAX_SELECTED_VAL;
 float MIN_SELECTED_VAL;
 
+//The max and min values for the selected points in the top left graph
 float MAX_DRAGGED_VAL;
 float MIN_DRAGGED_VAL;
 float minX, minY, maxX, maxY;
@@ -32,6 +33,7 @@ boolean dragging;
 //if box drawn, leave it up
 boolean boxDrawn = false;
 
+//used for dragging to store the coorinates
 float startX; 
 float startY; 
 float endX; 
@@ -44,7 +46,7 @@ enum View {
 }
 
 
-  void setup() {
+void setup() {
   surface.setResizable(true); 
   size(800, 600);
   dragging = false; 
