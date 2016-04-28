@@ -1,6 +1,5 @@
 import java.io.File;
 
-
 //
 // Pair class to hold data for ticker 
 // and table
@@ -8,7 +7,7 @@ import java.io.File;
 class CsvFile {
   public String ticker;
   public Table csv;
-  
+  //Determines which color goes with whic CSV
   private int color_Of_Ticker; 
   
   public boolean selected;

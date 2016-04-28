@@ -45,8 +45,7 @@ enum View {
     DETAIL_SELECTED
 }
 
-
-  void setup() {
+void setup() {
   surface.setResizable(true); 
   size(800, 600);
   dragging = false; 
@@ -113,13 +112,14 @@ void draw() {
   //Bottom - Button Rectangle
   rect(2, height/2 + 10 + height/3, width - 5, height/7); 
 
+  //Functions in charge of drawing what is in each of the four rectangles
   drawTickers();
   drawOverviewLines();
   drawSelectedLines();
   drawDetailedLines(); 
 
   stroke(#000000);
-
+  //Checks to see if the user wants to focus in on certain points of the stocks
   if (boxDrawn) {
     noFill();
     if (dragging) {
@@ -130,6 +130,10 @@ void draw() {
   }
 }
 
+/*
+This function is in charge of drawing the stock symbols at the bottom of the screen. The
+stock is initial gray but we attach what color it should be if it becomes selected. 
+*/
 void drawTickers() {
   textSize(20);
   textAlign(CENTER);
@@ -151,6 +155,11 @@ void drawTickers() {
   }
 }
 
+/*
+This function is in charge of detecting if the user is selecting a certain area of time
+for the stocks. We need to see when the user stopped dragging their mouse so that we know
+that value.
+*/
 void mouseReleased() {
   if (dragging) {
     last_mouseX_pos = mouseX;
@@ -159,16 +168,19 @@ void mouseReleased() {
   dragging = false;
 }
 
+/*
+In order to detect which area the user has selected we will look at the rectangle's
+height and width. If the user clicks on a certain area containing a stock symbol that
+stock symbol will then be shown with color all throughout the visualization instead of
+being gray. If the user unselects the stock symbol, then the color will go away. 
+
+Once a stock is selcted we have to keep track of it in order to scale it properly to itself
+or to the other stocks that were selected as well. 
+*/
 void mousePressed() {
   final float yR = height/2.0 + 10 + height/3.0;
   final float hR = height/7.0;
   float wR = (float)(width - 5) / (float)files.size();
-
-
-  // rect(2, 2, width/2, height/2);
-  final float overviewYcordR =  2;
-  final float overviewHeightR = height/2.0;
-  float overviewWidthR = (float)(width/2)/(float)files.size(); 
 
   if (mouseX >= 2 && mouseX <= width/2 && mouseY>=2 && mouseY<= height/2 && !boxDrawn) {
     dragging = true;
@@ -224,6 +236,10 @@ void mousePressed() {
   }
 }
 
+/*
+This function is in charge of determining what is the highest closing value for the
+stock table that is passed into the function. 
+*/
 float getMaxCloseVal(Table tab) {
   Float max = null;
   for (TableRow row : tab.rows()) {
@@ -238,6 +254,10 @@ float getMaxCloseVal(Table tab) {
   return max.floatValue();
 }
 
+/*
+This function is in charge of determining what closing value is the smallest value in the
+table that was passed into the function. 
+*/
 float getMinCloseVal(Table tab) {
   Float max = null;
   for (TableRow row : tab.rows()) {
@@ -252,6 +272,15 @@ float getMinCloseVal(Table tab) {
   return max.floatValue();
 }
 
+/*
+This function is in charge of drawing the lines to scale of the rectangle they are in.
+The function takes the specific table values that it is drawing, the starting x cord of 
+the rectangle, the width of the rectangle, the height of the rectangle, and the maximum
+closing value and the minimum closing value. 
+
+This function can work with the overview rectangle as well as the selected stocks 
+rectangle. 
+*/
 void drawLines(CsvFile file, 
   float xPos, 
   float boxWidth, 
@@ -260,7 +289,6 @@ void drawLines(CsvFile file,
   float MIN, 
   View v) {
   noFill();
-
 
   if (v == View.OVERVIEW && boxDrawn) {
     stroke(#BFBFBF);
@@ -298,6 +326,11 @@ void drawLines(CsvFile file,
   endShape();
 }
 
+/*
+This function is in charge of iterating through the list of CSV files and determining
+which files have been selected or not. If the files were selected, they will be passed
+to the drawLines() function so that they can be drawn to the the selected rectangle.
+*/
 void drawSelectedLines() {
   //rect(width/2 + 5, 2, width/2 - 10, height/2); 
   for (CsvFile file : files) {
@@ -314,6 +347,11 @@ void drawSelectedLines() {
     }
   }
 }
+/*
+This function is in charge of calling drawLines() for all of the files in the list of
+CSVs. We pass in the values for the top left rectanlge as well as the overview max and
+min closing values. 
+*/
 void drawOverviewLines() {
   for (CsvFile f : files) 
     drawLines(f, 
@@ -325,6 +363,10 @@ void drawOverviewLines() {
       View.OVERVIEW);
 }
 
+/*
+This function is in charge of drawing the lines for the selected stocks and the selcted
+timeline.
+*/
 void drawDetailedLines() {
 
   float boxHeight = height/3;
@@ -334,8 +376,6 @@ void drawDetailedLines() {
     if (!f.selected)
       continue;
     else {
-      
-
       setDragged();
       float MIN = MIN_DRAGGED_VAL;
       float MAX = MAX_DRAGGED_VAL;
@@ -356,25 +396,25 @@ void drawDetailedLines() {
       String lowerDate, higherDate;
       if (actualMax>=f.csv.getRowCount())
         lowerDate=f.csv.getRow(int(actualMax)-1).getString("Date");
-       else
-         lowerDate=f.csv.getRow(int(actualMax)).getString("Date");
+      else
+        lowerDate=f.csv.getRow(int(actualMax)).getString("Date");
       if (actualMin>=f.csv.getRowCount())
         higherDate=f.csv.getRow(1).getString("Date");
-       else
-         higherDate=f.csv.getRow(int(actualMin)).getString("Date");
-      
-      
+      else
+        higherDate=f.csv.getRow(int(actualMin)).getString("Date");
+
+
       lowerDate=changeDate(lowerDate);
       higherDate=changeDate(higherDate);
 
-      println(lowerDate,higherDate);
+      println(lowerDate, higherDate);
       textSize(20);
       textAlign(LEFT);
       fill(0); 
-      text(lowerDate,3,height/2+height/3);
+      text(lowerDate, 3, height/2+height/3);
       textAlign(RIGHT);
-      text(higherDate,width-3,height/2+height/3);
-      
+      text(higherDate, width-3, height/2+height/3);
+
       noFill();
       stroke(f.getColorOfTicker()); 
       strokeWeight(1);
@@ -428,6 +468,7 @@ void setDragged() {
     MIN_DRAGGED_VAL = min.floatValue();
 }
 
+//This function gets the maximum close value for the selected/dragged portion
 float getMaxDraggedCloseVal(Table tab, float minPct, float maxPct) {
   Float max = null;
   float rowMin=minPct*tab.getRowCount();
@@ -453,6 +494,7 @@ float getMaxDraggedCloseVal(Table tab, float minPct, float maxPct) {
   return max.floatValue();
 }
 
+//This function gets the minimum close value for the selected/dragged portion
 float getMinDraggedCloseVal(Table tab, float minPct, float maxPct) {
   Float max = null;
   float rowMin=minPct*tab.getRowCount();
@@ -479,6 +521,8 @@ float getMinDraggedCloseVal(Table tab, float minPct, float maxPct) {
   return max.floatValue();
 }
 
+//This function gets the date and year from the dragged portion to be displayed in the
+//middle triangle
 String changeDate(String Date) {
   String year= Date.substring(0, 4);
   String month= Date.substring(5, 7);
