@@ -46,7 +46,7 @@ enum View {
 }
 
 
-void setup() {
+  void setup() {
   surface.setResizable(true); 
   size(800, 600);
   dragging = false; 
@@ -334,9 +334,7 @@ void drawDetailedLines() {
     if (!f.selected)
       continue;
     else {
-      noFill();
-      stroke(f.getColorOfTicker()); 
-      strokeWeight(1);
+      
 
       setDragged();
       float MIN = MIN_DRAGGED_VAL;
@@ -354,6 +352,32 @@ void drawDetailedLines() {
       float boxWidth = width-5.0;
       float xWidth = boxWidth/(float)(rowMax-rowMin); 
 
+
+      String lowerDate, higherDate;
+      if (actualMax>=f.csv.getRowCount())
+        lowerDate=f.csv.getRow(int(actualMax)-1).getString("Date");
+       else
+         lowerDate=f.csv.getRow(int(actualMax)).getString("Date");
+      if (actualMin>=f.csv.getRowCount())
+        higherDate=f.csv.getRow(1).getString("Date");
+       else
+         higherDate=f.csv.getRow(int(actualMin)).getString("Date");
+      
+      
+      lowerDate=changeDate(lowerDate);
+      higherDate=changeDate(higherDate);
+
+      println(lowerDate,higherDate);
+      textSize(20);
+      textAlign(LEFT);
+      fill(0); 
+      text(lowerDate,3,height/2+height/3);
+      textAlign(RIGHT);
+      text(higherDate,width-3,height/2+height/3);
+      
+      noFill();
+      stroke(f.getColorOfTicker()); 
+      strokeWeight(1);
       int i=0;
       beginShape(); 
       for (TableRow r : f.csv.rows()) { 
@@ -453,4 +477,36 @@ float getMinDraggedCloseVal(Table tab, float minPct, float maxPct) {
     i++;
   }
   return max.floatValue();
+}
+
+String changeDate(String Date) {
+  String year= Date.substring(0, 4);
+  String month= Date.substring(5, 7);
+
+  if (month.equals("01"))
+    month="JAN";
+  else if (month.equals("02"))
+    month="FEB";
+  else if (month.equals("03"))
+    month="MAR";
+  else if (month.equals("04"))
+    month="APR";
+  else if (month.equals("05"))
+    month="MAY";
+  else if (month.equals("06"))
+    month="JUN";
+  else if (month.equals("07"))
+    month="JUL";
+  else if (month.equals("08"))
+    month="AUG";
+  else if (month.equals("09"))
+    month="SEPT";
+  else if (month.equals("10"))
+    month="OCT";
+  else if (month.equals("11"))
+    month="NOV";
+  else if (month.equals("12"))
+    month="DEC";
+
+  return (month+" "+year);
 }
