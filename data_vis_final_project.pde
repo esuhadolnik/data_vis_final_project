@@ -392,7 +392,7 @@ void drawDetailedLines() {
       float boxWidth = width-5.0;
       float xWidth = boxWidth/(float)(rowMax-rowMin); 
 
-
+      //gets the upper and lower dates for the values in the long middle box and displayes the dates
       String lowerDate, higherDate;
       if (actualMax>=f.csv.getRowCount())
         lowerDate=f.csv.getRow(int(actualMax)-1).getString("Date");
@@ -407,7 +407,7 @@ void drawDetailedLines() {
       lowerDate=changeDate(lowerDate);
       higherDate=changeDate(higherDate);
 
-      println(lowerDate, higherDate);
+      
       textSize(20);
       textAlign(LEFT);
       fill(0); 
@@ -521,7 +521,7 @@ float getMinDraggedCloseVal(Table tab, float minPct, float maxPct) {
   return max.floatValue();
 }
 
-//This function gets the date and year from the dragged portion to be displayed in the
+//This function gets the month and year from the dragged portion to be displayed in the
 //middle triangle
 String changeDate(String Date) {
   String year= Date.substring(0, 4);
